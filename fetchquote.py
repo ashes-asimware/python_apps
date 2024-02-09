@@ -1,6 +1,6 @@
 import requests
 import json
-from config import *
+from config import read_apikey, read_url
 
 # Replace 'your_api_key' with your actual API key
 api_key = read_apikey()
