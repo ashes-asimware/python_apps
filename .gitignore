@@ -2,3 +2,5 @@ app.ini
 app.json
 __pycache__\*
 .pytest_cache
+ragimpl/.env
+ragimpl/venv
