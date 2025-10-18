@@ -1,64 +1,145 @@
 import os
 from dotenv import load_dotenv
 import chromadb
-from openai import OpenAI
 from chromadb.utils import embedding_functions
+from openai import OpenAI
 
-load_dotenv()  # Load environment variables from .env file
-openai_key = os.getenv("OPEN_API_KEY")
-openai_ef = embedding_functions.OpenAIEmbeddingFunction(
-    api_key=openai_key,
-    model_name="text-embedding-3-small"
-)
+load_dotenv()
 
-# Initialize ChromaDB client with persistence
-chroma_client = chromadb.PersistentClient(
-    path="./chroma_db",
-    collection_name="ragimpl_collection")
-collection = chroma_client.get_or_create_collection(
-    name="ragimpl_collection",
-    embedding_function=openai_ef
-)
-# Initialize OpenAI client
-openai_client = OpenAI(api_key=openai_key)
-response = openai_client.chat.completions.create(
-    model="gpt-4o",
-    messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": "What is the life expectancy of a human being in the United States?"}
-    ],
-)
-print(response.choices[0].message.content)
+def get_openai_key():
+    return os.getenv("OPEN_API_KEY")
 
-# Function to load all docuements from files with .txt extension from a specified directory
-def load_documents_from_directory(directory_path):
-    documents = []
+
+def create_openai_client(api_key):
+    return OpenAI(api_key=api_key)
+
+
+def create_embedding_function(api_key: Optional[str] = None, model_name: str = "text-embedding-3-small"):
+    if embedding_functions is None:
+        return None
+    if api_key is None:
+        api_key = get_openai_key()
+    return embedding_functions.OpenAIEmbeddingFunction(api_key=api_key, model_name=model_name)
+
+
+def create_chroma_collection(path: str = "./chroma_db", collection_name: str = "ragimpl_collection", embedding_function=None):
+    """Create or return a ChromaDB collection. Raises if chromadb is not installed."""
+    if chromadb is None:
+        raise RuntimeError("chromadb package is not installed")
+
+    # PersistentClient exists in chromadb; fall back to Client if unavailable.
+    client = None
+    if hasattr(chromadb, "PersistentClient"):
+        client = chromadb.PersistentClient(path=path, collection_name=collection_name)
+    elif hasattr(chromadb, "Client"):
+        client = chromadb.Client()
+    else:
+        raise RuntimeError("unsupported chromadb version")
+
+    if hasattr(client, "get_or_create_collection"):
+        collection = client.get_or_create_collection(name=collection_name, embedding_function=embedding_function)
+    elif hasattr(client, "create_collection"):
+        collection = client.create_collection(name=collection_name)
+    else:
+        raise RuntimeError("chromadb client does not expose collection creation")
+
+    return collection
+
+
+def load_documents_from_directory(directory_path: str) -> List[Dict]:
+    """Load all .txt files from a directory and return a list of dicts with id/text."""
+    documents: List[Dict] = []
+    if not os.path.isdir(directory_path):
+        return documents
     for filename in os.listdir(directory_path):
         if filename.endswith(".txt"):
-            with open(os.path.join(directory_path, filename), 'r', encoding='utf-8') as file:
-                documents.append(file.read())
+            full_path = os.path.join(directory_path, filename)
+            with open(full_path, "r", encoding="utf-8") as fh:
+                documents.append({"id": filename, "text": fh.read()})
     return documents
 
-# Function to split text into chunks
-def split_text_into_chunks(text, chunk_size=1000, overlap=20):
+
+def split_text_into_chunks(text: str, chunk_size: int = 1000, overlap: int = 20) -> List[str]:
     start = 0
-    chunks = []
-    while start < len(text):
+    chunks: List[str] = []
+    text_len = len(text)
+    if text_len == 0:
+        return chunks
+    while start < text_len:
         end = start + chunk_size
         chunk = text[start:end]
         chunks.append(chunk)
-        start += chunk_size - overlap
+        start += max(1, chunk_size - overlap)
     return chunks
 
-# Function to split documents into chunks
-def split_documents(documents, chunk_size=1000, overlap=20):
-    all_chunks = []
+
+def split_documents(documents: List[Dict], chunk_size: int = 1000, overlap: int = 20) -> List[Dict]:
+    document_chunks: List[Dict] = []
     for doc in documents:
-        chunks = split_text_into_chunks(doc, chunk_size, overlap)
-        all_chunks.extend(chunks)
-    return all_chunks
+        text = doc.get("text", "")
+        chunks = split_text_into_chunks(text, chunk_size, overlap)
+        for i, chunk in enumerate(chunks):
+            document_chunks.append({
+                "id": f"{doc.get('id', 'doc')}_{i}",
+                "chunk_index": i,
+                "text": chunk,
+            })
+    return document_chunks
 
-# Load and split documents
-documents = load_documents_from_directory("./documents")
-chunks = split_documents(documents)
 
+def create_openai_embedding(openai_client, text: str, model: str = "text-embedding-3-small"):
+    """Create embedding using an OpenAI client instance."""
+    if openai_client is None:
+        raise RuntimeError("openai client is required to create embeddings")
+    response = openai_client.embeddings.create(input=text, model=model)
+    return response.data[0].embedding
+
+
+def upsert_document_embeddings(collection, document_chunks: List[Dict], openai_client=None):
+    """Upsert document chunks into a ChromaDB collection.
+
+    If a chunk does not contain an 'embedding' key, an OpenAI client must be
+    provided to compute one.
+    """
+    for doc in document_chunks:
+        embedding = doc.get("embedding")
+        if embedding is None:
+            if openai_client is None:
+                raise RuntimeError("embedding missing and no OpenAI client provided")
+            embedding = create_openai_embedding(openai_client, doc["text"])
+        collection.upsert({
+            "ids": [doc["id"]],
+            "embeddings": [embedding],
+            "documents": [doc["text"]],
+        })
+
+
+def query_documents(collection, question: str, n_results: int = 5) -> List[str]:
+    results = collection.query(query_texts=[question], n_results=n_results)
+    # results['documents'] is often a list of lists; flatten safely
+    docs = []
+    for sub in results.get("documents", []):
+        if isinstance(sub, list):
+            docs.extend(sub)
+        else:
+            docs.append(sub)
+    return docs
+
+
+def generate_response(openai_client, question: str, context_chunks: List[str], model: str = "gpt-4o") -> str:
+    context_text = "\n\n".join(context_chunks)
+    prompt = f"Context:\n{context_text}\n\nQuestion: {question}\nAnswer:"
+    response = openai_client.chat.completions.create(
+        model=model,
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt},
+        ],
+    )
+    return response.choices[0].message.content
+
+
+if __name__ == "__main__":
+    # Example usage (guarded so imports don't trigger network calls on import)
+    load_env()
+    key = get_openai_key()

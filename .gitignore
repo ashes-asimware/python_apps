@@ -4,3 +4,4 @@ __pycache__\*
 .pytest_cache
 ragimpl/.env
 ragimpl/venv
+ragimpl/.venv
