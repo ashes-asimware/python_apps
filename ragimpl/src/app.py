@@ -14,43 +14,20 @@ def create_openai_client(api_key):
     return OpenAI(api_key=api_key)
 
 
-def create_embedding_function(api_key: Optional[str] = None, model_name: str = "text-embedding-3-small"):
-    if embedding_functions is None:
-        return None
-    if api_key is None:
-        api_key = get_openai_key()
+def create_embedding_function(api_key, model_name: str = "text-embedding-3-small"):
     return embedding_functions.OpenAIEmbeddingFunction(api_key=api_key, model_name=model_name)
 
 
 def create_chroma_collection(path: str = "./chroma_db", collection_name: str = "ragimpl_collection", embedding_function=None):
     """Create or return a ChromaDB collection. Raises if chromadb is not installed."""
-    if chromadb is None:
-        raise RuntimeError("chromadb package is not installed")
-
-    # PersistentClient exists in chromadb; fall back to Client if unavailable.
-    client = None
-    if hasattr(chromadb, "PersistentClient"):
-        client = chromadb.PersistentClient(path=path, collection_name=collection_name)
-    elif hasattr(chromadb, "Client"):
-        client = chromadb.Client()
-    else:
-        raise RuntimeError("unsupported chromadb version")
-
-    if hasattr(client, "get_or_create_collection"):
-        collection = client.get_or_create_collection(name=collection_name, embedding_function=embedding_function)
-    elif hasattr(client, "create_collection"):
-        collection = client.create_collection(name=collection_name)
-    else:
-        raise RuntimeError("chromadb client does not expose collection creation")
-
+    client = chromadb.PersistentClient(path=path, collection_name=collection_name)
+    collection = client.get_or_create_collection(name=collection_name, embedding_function=embedding_function)
     return collection
 
 
-def load_documents_from_directory(directory_path: str) -> List[Dict]:
+def load_documents_from_directory(directory_path):
     """Load all .txt files from a directory and return a list of dicts with id/text."""
-    documents: List[Dict] = []
-    if not os.path.isdir(directory_path):
-        return documents
+    documents = []
     for filename in os.listdir(directory_path):
         if filename.endswith(".txt"):
             full_path = os.path.join(directory_path, filename)
@@ -59,12 +36,10 @@ def load_documents_from_directory(directory_path: str) -> List[Dict]:
     return documents
 
 
-def split_text_into_chunks(text: str, chunk_size: int = 1000, overlap: int = 20) -> List[str]:
+def split_text_into_chunks(text, chunk_size=1000, overlap=20):
     start = 0
-    chunks: List[str] = []
+    chunks = []
     text_len = len(text)
-    if text_len == 0:
-        return chunks
     while start < text_len:
         end = start + chunk_size
         chunk = text[start:end]
@@ -73,8 +48,8 @@ def split_text_into_chunks(text: str, chunk_size: int = 1000, overlap: int = 20)
     return chunks
 
 
-def split_documents(documents: List[Dict], chunk_size: int = 1000, overlap: int = 20) -> List[Dict]:
-    document_chunks: List[Dict] = []
+def split_documents(documents, chunk_size = 1000, overlap = 20):
+    document_chunks = []
     for doc in documents:
         text = doc.get("text", "")
         chunks = split_text_into_chunks(text, chunk_size, overlap)
@@ -87,20 +62,12 @@ def split_documents(documents: List[Dict], chunk_size: int = 1000, overlap: int 
     return document_chunks
 
 
-def create_openai_embedding(openai_client, text: str, model: str = "text-embedding-3-small"):
-    """Create embedding using an OpenAI client instance."""
-    if openai_client is None:
-        raise RuntimeError("openai client is required to create embeddings")
+def create_openai_embedding(openai_client, text, model = "text-embedding-3-small"):
     response = openai_client.embeddings.create(input=text, model=model)
     return response.data[0].embedding
 
 
-def upsert_document_embeddings(collection, document_chunks: List[Dict], openai_client=None):
-    """Upsert document chunks into a ChromaDB collection.
-
-    If a chunk does not contain an 'embedding' key, an OpenAI client must be
-    provided to compute one.
-    """
+def upsert_document_embeddings(collection, document_chunks, openai_client=None):
     for doc in document_chunks:
         embedding = doc.get("embedding")
         if embedding is None:
@@ -112,7 +79,6 @@ def upsert_document_embeddings(collection, document_chunks: List[Dict], openai_c
             "embeddings": [embedding],
             "documents": [doc["text"]],
         })
-
 
 def query_documents(collection, question: str, n_results: int = 5) -> List[str]:
     results = collection.query(query_texts=[question], n_results=n_results)
@@ -139,7 +105,9 @@ def generate_response(openai_client, question: str, context_chunks: List[str], m
     return response.choices[0].message.content
 
 
+
+
 if __name__ == "__main__":
     # Example usage (guarded so imports don't trigger network calls on import)
-    load_env()
+    load_dotenv()
     key = get_openai_key()
