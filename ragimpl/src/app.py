@@ -111,3 +111,4 @@ if __name__ == "__main__":
     # Example usage (guarded so imports don't trigger network calls on import)
     load_dotenv()
     key = get_openai_key()
+
