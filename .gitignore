@@ -3,4 +3,5 @@ app.json
 __pycache__\*
 .pytest_cache
 ragimpl/.env
-ragimpl/venv
+ragimpl/venv/
+ragimpl/venv/*
