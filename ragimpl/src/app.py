@@ -104,6 +104,15 @@ def generate_response(openai_client, question: str, context_chunks: List[str], m
     )
     return response.choices[0].message.content
 
+    # Example of question and response generation
+    question = "What is the main topic of the documents?"
+    context_chunks = query_documents(collection, question, n_results=5)
+    response = generate_response(openai_client, question, context_chunks, model="gpt-4o")
+    print("Response:", response)
+
+    
+
+
 
 
 
