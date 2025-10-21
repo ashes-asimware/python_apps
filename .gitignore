@@ -2,3 +2,4 @@ app.ini
 app.json
 __pycache__\*
 .pytest_cache
+python_apps
