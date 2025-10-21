@@ -1,9 +1,0 @@
-{
-    "secrets" : {
-        "apiKey" : "NS6YJFPEMAQQBQDF7MUNX6TZ4JDJNKV8",
-        "url" : "https://api.tdameritrade.com/v1/marketdata/quotes",
-        "databaseConnection" : "Driver={ODBC Driver 18 for SQL Server};Server=tcp:ashes.database.windows.net,1433;Database=trading;Uid=ashesmukherjee;Pwd=Sp@wn19691972;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
-    }
-}
-
- 
