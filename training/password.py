@@ -1,1 +1,1 @@
-PASSWORD="Sp@wn970078489"
+PASSWORD="yourpassword"
