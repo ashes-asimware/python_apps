@@ -7,7 +7,6 @@ from langchain.text_splitter import (
 )
 from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
 
-
 # Read the PDF file
 reader = PdfReader("sample.pdf")
 pdf_texts = [p.extract_text().strip() for p in reader.pages]
@@ -61,13 +60,6 @@ generated_response = augment_query_generated_response(
 joint_query = f"{augmented_query} {generated_response}"
 results = app.chroma_collection.query(n_results=5, query_texts=[joint_query], include=["documents", "embeddings"])
 retrieved_documents = results['documents'][0]
- 
-
-
-
-
-
-
 
 def word_wrap(text, width=70):
     return textwrap.fill(text, width=width)
@@ -101,7 +93,4 @@ question = "What is the main topic of the documents?"
 context_chunks = app.query_documents(app.collection, question, n_results=5)
 response = app.generate_response(app.openai_client, question, context_chunks, model="gpt-4o")
 print("Response:", response)
-
-
-
 
