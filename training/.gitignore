@@ -1,0 +1,28 @@
+# Virtual environment folders
+venv/
+venv/*
+venv*
+\.venv/
+\.venv*
+
+# Windows virtualenv scripts folder pattern
+venv\
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Installer logs
+pip-log.txt
+
+# VS Code settings
+/.vscode/
+
+# Password file
+password.py
