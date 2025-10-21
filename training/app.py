@@ -7,16 +7,11 @@ db = mc.connect(
     password=PASSWORD
 )
 print('Connected to MySQL server:', db)
-try:                    
-    cursor = db.cursor()
-except:
-    print("Error creating cursor")
-    db.close()
-    exit(1)
-
+cursor = db.cursor()
 print("Cursor created:", cursor)
+
 cursor.execute("create database test_db")
-print("Database 'test_db' created.")
+print("Database created.")
 # cursor.use_database("test_db")
 # table_ddl = """
 # CREATE TABLE game_stats (

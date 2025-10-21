@@ -1,0 +1,1 @@
+PASSWORD="your_mysql_password_here"
