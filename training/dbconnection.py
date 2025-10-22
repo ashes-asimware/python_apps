@@ -46,4 +46,39 @@ class DatabaseConnection:
         if qtype == "dml":
             self.connection.commit()
 
+    def update(self, query, params=None):
+        """Execute an UPDATE query with parameters."""
+        if not self.connection:
+            raise Exception("Database connection is not established.")
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute(query, params or ())
+            self.connection.commit()
+            return cursor.rowcount
+        finally:
+            cursor.close()
+
+    def fetch_all(self, query, params=None):
+        """Execute a SELECT query and return all matching rows."""
+        if not self.connection:
+            raise Exception("Database connection is not established.")
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute(query, params or ())
+            return cursor.fetchall()
+        finally:
+            cursor.close()
+
+    def delete(self, query, params=None):
+        """Execute a DELETE query with parameters."""
+        if not self.connection:
+            raise Exception("Database connection is not established.")
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute(query, params or ())
+            self.connection.commit()
+            return cursor.rowcount
+        finally:
+            cursor.close()
+
     
