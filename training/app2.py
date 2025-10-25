@@ -1,8 +1,8 @@
 from password import PASSWORD
 import messages as msg
-import dbconnection as dc
+from sharedlib import DatabaseConnection
 
-dbconn = dc.DatabaseConnection(
+dbconn = DatabaseConnection(
     host="localhost",
     user="root"
 )
