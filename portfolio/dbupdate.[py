@@ -1,2 +1,4 @@
 # This file will be called for all database operations to update portfolio data,
 # It uses the sharedlib.DatabaseConnection class to read and write to the MySQL database
+from sharedlib import DatabaseConnection
+from password.py import PASSWORD
