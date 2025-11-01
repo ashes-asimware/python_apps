@@ -34,3 +34,29 @@ sample_dict["float"] = 6.28  # Update float value
 dict_keys = sample_dict.keys()
 dict_values = sample_dict.values()
 dict_items = sample_dict.items()
+
+# Create tuple for a point in 2D space
+point_2d = (10, 20)  # (x, y) coordinates
+
+# Accessing tuple elements
+x_coordinate = point_2d[0]
+y_coordinate = point_2d[1]
+
+# Create a tuple with a single element
+single_element_tuple = (5,)  # Note the comma
+
+# Create a set with at least 5 unique values
+unique_set = {1, 2, 3, 4, 5}
+
+# Create an empty set with set() function
+empty_set = set()
+
+# Create a set from a list
+list_with_duplicates = [1, 2, 2, 3, 4, 4, 5]
+set_from_list = set(list_with_duplicates)  # {1, 2, 3, 4, 5}
+
+# Use remove and discard methods on set
+unique_set.remove(3)  # Removes 3 from the set
+unique_set.discard(6)  # Does nothing as 6 is not in the set
+unique_set.discard(4)  # Removes 4 from the set
+
