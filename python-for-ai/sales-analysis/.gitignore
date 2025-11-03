@@ -1,0 +1,17 @@
+# Exclude output folder and all its contents
+output/
+
+# Exclude Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Exclude common temporary files
+*.tmp
+*.temp
+~*
+
+# Exclude OS-specific files
+.DS_Store
+Thumbs.db
