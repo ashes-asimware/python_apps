@@ -3,8 +3,8 @@ The following module includes process for connecting to APIs using external tool
 '''
 import requests
 
-latitude = 40.7128
-longitude = -74.0060
+latitude = 80
+longitude = -80
 
 weather_api_url = f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true"
 
@@ -19,6 +19,7 @@ if response.status_code == 200:
     print(f"Current Windspeed: {windspeed} km/h")
 else:
     print("Failed to retrieve weather data")
+
 
 
 
