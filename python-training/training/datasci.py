@@ -39,5 +39,16 @@ arr32d = arr3.reshape(2,6)
 
 combined2d = np.concatenate((arr12d, arr22d, arr32d))
 print(combined2d)
+print("-"*20)
+arr42d = np.array([[1, 2, 3], [4, 5, 6]])
+arr52d = np.array([[7, 8, 9], [10, 11, 12]])
+arr62d = np.array([[13, 14, 15], [16, 17, 18]])
 
+matrix = np.stack((arr42d, arr52d, arr62d), axis=2)
+print(matrix)
+print("-"*20)
+split_arrays = np.vsplit(matrix, 2)
+print(split_arrays)
 
+# use arange to create sequences of numbers for a 2-d array
+seq_array = np.arange(0, 8).reshape(1,2,2,2,1)
