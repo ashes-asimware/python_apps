@@ -1,8 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy.stats as stats
 from scipy.stats import binom
-import pandas as pd
 
 
 def plot_binomial_distribution(n, p):
