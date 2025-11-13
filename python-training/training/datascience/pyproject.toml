@@ -1,7 +1,7 @@
 [project]
 name = "datascience"
 version = "0.1.0"
-description = "Add your description here"
+description = "Scripts to explore data science concepts"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
