@@ -1,2 +1,9 @@
 # Exclude images folder
 images/
+
+# Exclude SSL certificates
+key.pem
+cert.pem
+
+# Exclude
+secretvalues.py

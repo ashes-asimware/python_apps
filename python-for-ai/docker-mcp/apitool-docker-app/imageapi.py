@@ -44,5 +44,12 @@ async def get_image_by_number(random_number: str):
 
 if __name__ == "__main__":
     import uvicorn
+    import secretvalues as ss
 
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(
+        app,
+        host=ss.IP_ADDRESS,
+        port=ss.PORT,
+        ssl_keyfile=ss.SSL_KEYFILE,
+        ssl_certfile=ss.SSL_CERTFILE,
+    )
