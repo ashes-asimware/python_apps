@@ -3,7 +3,7 @@ from icrawler.builtin import GoogleImageCrawler
 
 
 # fetch 100 images of cars from google images and save them as PNG files
-def random_image_generator(pictureofthing="cars", num_images=100):
+def image_generator(pictureofthing="cars", num_images=100):
     # Set up the output folder
     output_dir = os.Path("images")
     os.makedirs(output_dir, exist_ok=True)
@@ -34,5 +34,5 @@ def clear_images():
         print("No images to clear.")
 
 
-random_image_generator()  # Uncomment to generate images
+image_generator()  # Uncomment to generate images
 # clear_images()  # Uncomment to clear images
