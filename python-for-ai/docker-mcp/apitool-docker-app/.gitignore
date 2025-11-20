@@ -2,8 +2,7 @@
 images/
 
 # Exclude SSL certificates
-key.pem
-cert.pem
+artifacts/
 
 # Exclude
 secretvalues.py

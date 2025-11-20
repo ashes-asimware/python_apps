@@ -8,6 +8,14 @@ IMAGES_FOLDER = Path("images")
 MAX_IMAGES = 9  # Assuming a maximum of 25 images are stored
 
 
+# add a default route and return swagger page
+@app.get("/")
+async def root():
+    """Return a welcome message with link to API docs"""
+    return """<h1>Welcome to the Image API</h1>
+<p>Use the /docs endpoint to explore the API documentation.</p>"""
+
+
 @app.get("/images/count")
 async def get_image_count():
     """Return the number of PNG files in the images folder"""
@@ -44,12 +52,13 @@ async def get_image_by_number(random_number: str):
 
 if __name__ == "__main__":
     import uvicorn
-    import secretvalues as ss
+    from artifacts import secretvalues as ss
+    import configsettings as cs
 
     uvicorn.run(
         app,
-        host=ss.IP_ADDRESS,
-        port=ss.PORT,
+        host=cs.IP_ADDRESS,
+        port=cs.PORT,
         ssl_keyfile=ss.SSL_KEYFILE,
         ssl_certfile=ss.SSL_CERTFILE,
     )
