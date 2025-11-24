@@ -1,0 +1,33 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# UV cache
+.uv/
+
+# IDE
+.vscode/
+.idea/
+
+# Artifacts folder (local config)
+artifacts/
+cert.pem
+key.pem
+
+# Environment files
+.env
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+README.md

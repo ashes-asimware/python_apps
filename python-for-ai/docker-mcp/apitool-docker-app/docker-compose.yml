@@ -1,0 +1,12 @@
+services:
+  imageapi:
+    build: .
+    container_name: imageapi-https
+    ports:
+      - "8443:8443"
+    volumes:
+      # Mount images folder to persist data
+      - ./images:/app/images
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
