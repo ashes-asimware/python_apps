@@ -19,8 +19,6 @@ ENV/
 
 # Artifacts folder (local config)
 artifacts/
-cert.pem
-key.pem
 
 # Environment files
 .env

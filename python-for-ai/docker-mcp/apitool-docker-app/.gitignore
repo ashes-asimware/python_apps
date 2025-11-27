@@ -6,5 +6,11 @@ artifacts/
 cert.pem
 key.pem
 
-# Exclude
+# Exclude secrets and credentials
 secretvalues.py
+deploy/acr-credentials.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/

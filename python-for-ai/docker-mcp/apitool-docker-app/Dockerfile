@@ -12,17 +12,23 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev
 
 # Copy application code
-COPY imageapi.py ./
+COPY imageapi.py webapp.py start.sh ./
 COPY configsettings.docker.py ./configsettings.py
 
 # Copy SSL certificates from root directory
 COPY key.pem cert.pem ./
 
-# Create images directory
-RUN mkdir -p images
+# Copy images folder with all images
+COPY images/ ./images/
 
-# Expose HTTPS port
-EXPOSE 8443
+# Copy Flask templates
+COPY templates/ ./templates/
 
-# Run the application using uv
-CMD ["uv", "run", "python", "imageapi.py"]
+# Make start script executable
+RUN chmod +x start.sh
+
+# Expose HTTPS ports (8443 for API, 8080 for web app)
+EXPOSE 8443 8080
+
+# Run both applications using the start script
+CMD ["./start.sh"]
