@@ -41,61 +41,19 @@ class CatAndMouse:
         y = (screen_height - window_height) // 2
         self.root.geometry(f"{window_width}x{window_height}+{x}+{y}")
 
-        # Create a mouse cursor label
-        self.mouse_cursor = tk.Label(
-            self.root,
-            text="🐭",
-            font=("Segoe UI Emoji", 24),
-            bg=self.root.cget("bg"),  # Match window background
-        )
-        self.mouse_cursor.place_forget()  # Hide initially
+        # Bind mouse click event to trigger cat movement
+        self.root.bind("<Button-1>", self.on_mouse_click)
 
-        # Bind mouse motion event to track cursor
-        self.root.bind("<Motion>", self.update_mouse_cursor)
-        self.root.bind("<Leave>", self.hide_mouse_cursor)
+        # Use a custom cursor from standard options
+        self.root.config(cursor="@" + "🐭" if False else "circle")
 
-        # Hide the default cursor when inside the window
-        self.root.config(cursor="none")
-
-        # Start periodic check after window is properly positioned
-        self.root.after(100, self.start_tracking)
-
-    def start_tracking(self):
-        """Start the periodic mouse position checking"""
-        self.check_mouse_movement()
-
-    def update_mouse_cursor(self, event):
-        """Update the mouse cursor image position"""
-        # Position the mouse emoji at the cursor location
-        # Offset slightly to center it on the cursor point
-        offset_x = -12  # Half of emoji width
-        offset_y = -12  # Half of emoji height
-        self.mouse_cursor.place(x=event.x + offset_x, y=event.y + offset_y)
-
-    def hide_mouse_cursor(self, event):
-        """Hide the mouse cursor when leaving the window"""
-        self.mouse_cursor.place_forget()
-
-    def check_mouse_movement(self):
-        # Get current mouse position relative to root window
-        win_x = self.root.winfo_rootx()
-        win_y = self.root.winfo_rooty()
-        win_width = self.root.winfo_width()
-        win_height = self.root.winfo_height()
-
-        mouse_x = self.root.winfo_pointerx() - win_x
-        mouse_y = self.root.winfo_pointery() - win_y
-
-        # Check if mouse is within window bounds
-        if 0 <= mouse_x <= win_width and 0 <= mouse_y <= win_height:
-            # Check if mouse has moved
-            if mouse_x != self.last_mouse_x or mouse_y != self.last_mouse_y:
-                self.move_cat_to_mouse(mouse_x, mouse_y)
-                self.last_mouse_x = mouse_x
-                self.last_mouse_y = mouse_y
-
-        # Schedule next check in 3000ms (3 seconds)
-        self.root.after(3000, self.check_mouse_movement)
+    def on_mouse_click(self, event):
+        """Handle mouse click to trigger cat movement"""
+        # Store the click position
+        click_x = event.x
+        click_y = event.y
+        # Short delay before cat starts moving
+        self.root.after(100, lambda: self.move_cat_to_mouse(click_x, click_y))
 
     def move_cat_to_mouse(self, mouse_x, mouse_y):
         # Calculate the vector from cat to mouse
@@ -112,7 +70,6 @@ class CatAndMouse:
             self.cat_y = self.cat_y + dy * move_ratio
 
             # Update label position with integer coordinates
-            self.cat.place_forget()  # Remove the previous placement
             self.cat.place(x=int(self.cat_x), y=int(self.cat_y))
 
 
