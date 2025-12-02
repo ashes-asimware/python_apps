@@ -19,3 +19,6 @@ average_salary = df_nba["Salary"].replace(0, pd.NA).mean()
 df_nba["Salary"] = df_nba["Salary"].replace(0, average_salary)
 
 print(f"After: {df_nba.isnull().sum()}")
+
+writer = pd.ExcelWriter("data\\nba_cleaned.xlsx", engine="xlsxwriter")
+
