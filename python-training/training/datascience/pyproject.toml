@@ -13,5 +13,6 @@ dependencies = [
     "pip>=25.3",
     "scikit-learn>=1.7.2",
     "scipy>=1.16.3",
+    "seaborn>=0.13.2",
     "xlsxwriter>=3.2.9",
 ]
