@@ -96,7 +96,7 @@ platformdirs==4.4.0
 pluggy==1.6.0
 prometheus_client==0.23.1
 prompt_toolkit==3.0.52
-protobuf==4.25.8
+protobuf==6.33.4
 psutil==7.1.0
 pulumi==3.185.0
 pulumi_aws==7.1.0
@@ -144,3 +144,5 @@ webcolors==24.11.1
 webencodings==0.5.1
 websocket-client==1.8.0
 widgetsnbextension==4.0.14
+
+
