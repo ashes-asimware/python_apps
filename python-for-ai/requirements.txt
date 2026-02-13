@@ -78,7 +78,7 @@ mysql-connector==2.2.9
 mysql-connector-python==9.4.0
 mysqlclient==2.2.7
 nbclient==0.10.2
-nbconvert==7.16.6
+nbconvert==7.17.0
 nbformat==5.10.4
 nest-asyncio==1.6.0
 notebook==7.4.5
@@ -91,7 +91,7 @@ pandocfilters==1.5.1
 paramiko==4.0.0
 parso==0.8.5
 parver==0.5
-pillow==11.3.0
+pillow==12.1.1
 platformdirs==4.4.0
 pluggy==1.6.0
 prometheus_client==0.23.1
