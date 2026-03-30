@@ -57,7 +57,7 @@ pyasn1_modules==0.4.2
 pybase64==1.4.2
 pydantic==2.12.3
 pydantic_core==2.41.4
-Pygments==2.19.2
+Pygments==2.20.0
 PyPika==0.48.9
 pyproject_hooks==1.2.0
 python-dateutil==2.9.0.post0
