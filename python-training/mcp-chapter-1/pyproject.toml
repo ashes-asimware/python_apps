@@ -1,0 +1,9 @@
+[project]
+name = "mcp-chapter-1"
+version = "0.1.0"
+description = "Chapter 1 MCP training project using FastAPI and the MCP CLI."
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.136.1",
+    "mcp[cli]>=1.27.0",
+]
