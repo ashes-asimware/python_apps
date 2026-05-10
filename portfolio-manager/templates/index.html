@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portfolio SQL Builder</title>
+    <style>
+      :root {
+        --bg: #f4f7fb;
+        --surface: #ffffff;
+        --panel: #f8fbff;
+        --ink: #1f2a37;
+        --muted: #64748b;
+        --accent: #0891b2;
+        --accent-dark: #0e7490;
+        --danger: #dc2626;
+        --border: #d4deea;
+        --input-bg: #ffffff;
+      }
+
+      :root[data-theme="dark"] {
+        --bg: #0b0f14;
+        --surface: #121821;
+        --panel: #151d29;
+        --ink: #e6edf3;
+        --muted: #9fb0c0;
+        --accent: #22d3ee;
+        --accent-dark: #06b6d4;
+        --danger: #fb7185;
+        --border: #2a3441;
+        --input-bg: #0f1620;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--ink);
+        background: linear-gradient(180deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 85%, #000 15%) 100%);
+      }
+
+      .wrap {
+        max-width: 1100px;
+        margin: 24px auto;
+        padding: 0 16px;
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+      }
+
+      .header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 1.6rem;
+      }
+
+      p {
+        margin-top: 0;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+
+      .panel {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px;
+        background: var(--panel);
+      }
+
+      .panel h2 {
+        margin: 0 0 8px;
+        font-size: 1rem;
+      }
+
+      .subtle {
+        margin: 0 0 10px;
+        font-size: 0.78rem;
+        color: #5b6877;
+      }
+
+      .field {
+        margin-bottom: 10px;
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .field label {
+        font-size: 0.84rem;
+        font-weight: 600;
+        margin: 0;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+        width: 100%;
+        font-size: 0.9rem;
+        border: 1px solid #bfc8d6;
+        border-radius: 8px;
+        padding: 8px;
+        color: var(--ink);
+        border-color: var(--border);
+        background: var(--input-bg);
+      }
+
+      input[readonly] {
+        background: #eef3f8;
+      }
+
+      .actions {
+        margin-top: 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      button,
+      .theme-toggle {
+        border: 0;
+        background: var(--accent);
+        color: #fff;
+        border-radius: 8px;
+        padding: 10px 16px;
+        font-size: 0.95rem;
+        cursor: pointer;
+      }
+
+      button:hover,
+      .theme-toggle:hover {
+        background: var(--accent-dark);
+      }
+
+      .theme-toggle {
+        font-size: 0.85rem;
+        padding: 8px 12px;
+      }
+
+      .msg {
+        margin: 0;
+        color: var(--accent-dark);
+        font-weight: 600;
+      }
+
+      .err {
+        margin: 0;
+        color: var(--danger);
+        font-weight: 600;
+      }
+
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .field {
+          grid-template-columns: 120px 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <div class="header-row">
+          <h1>Portfolio SQL Builder</h1>
+          <button class="theme-toggle" type="button" id="themeToggle">Toggle Theme</button>
+        </div>
+
+        {% if message %}
+        <p class="msg">{{ message }}</p>
+        {% endif %}
+
+        {% if error %}
+        <p class="err">{{ error }}</p>
+        {% endif %}
+
+        <form method="post" action="/generate">
+          <div class="grid">
+            <section class="panel">
+              <h2>{{ form_values.cc.category }}</h2>
+              <div class="field">
+                <label for="cc_enteredon">ENTEREDON</label>
+                <input type="text" id="cc_enteredon" name="cc_enteredon" value="{{ form_values.cc.enteredon }}" pattern="^\d{2}/\d{2}/\d{4}$" placeholder="MM/DD/YYYY" title="Use MM/DD/YYYY format" required />
+              </div>
+              <div class="field">
+                <label for="cc_bitcoin">BITCOIN</label>
+                <input class="numeric-input" type="text" inputmode="decimal" pattern="^-?\d+(\.\d+)?$" id="cc_bitcoin" name="cc_bitcoin" value="{{ form_values.cc.bitcoin }}" required />
+              </div>
+              <div class="field">
+                <label for="cc_ethereum">ETHEREUM</label>
+                <input class="numeric-input" type="text" inputmode="decimal" pattern="^-?\d+(\.\d+)?$" id="cc_ethereum" name="cc_ethereum" value="{{ form_values.cc.ethereum }}" required />
+              </div>
+              <div class="field">
+                <label for="cc_cash">CASH</label>
+                <input class="numeric-input" type="text" inputmode="decimal" pattern="^-?\d+(\.\d+)?$" id="cc_cash" name="cc_cash" value="{{ form_values.cc.cash }}" required />
+              </div>
+            </section>
+
+            <section class="panel">
+              <h2>{{ form_values.hs.category }}</h2>
+              <div class="field">
+                <label for="hs_enteredon">ENTEREDON</label>
+                <input type="text" id="hs_enteredon" name="hs_enteredon" value="{{ form_values.hs.enteredon }}" pattern="^\d{2}/\d{2}/\d{4}$" placeholder="MM/DD/YYYY" title="Use MM/DD/YYYY format" required />
+              </div>
+              <div class="field">
+                <label for="hs_hsa">HSA</label>
+                <input class="numeric-input" type="text" inputmode="decimal" pattern="^-?\d+(\.\d+)?$" id="hs_hsa" name="hs_hsa" value="{{ form_values.hs.hsa }}" required />
+              </div>
+            </section>
+
+            <section class="panel">
+              <h2>{{ form_values.ir.category }}</h2>
+              <div class="field">
+                <label for="ir_enteredon">ENTEREDON</label>
+                <input type="text" id="ir_enteredon" name="ir_enteredon" value="{{ form_values.ir.enteredon }}" pattern="^\d{2}/\d{2}/\d{4}$" placeholder="MM/DD/YYYY" title="Use MM/DD/YYYY format" required />
+              </div>
+              <div class="field">
+                <label for="ir_mgi">MGI</label>
+                <input class="numeric-input" type="text" inputmode="decimal" pattern="^-?\d+(\.\d+)?$" id="ir_mgi" name="ir_mgi" value="{{ form_values.ir.mgi }}" required />
+              </div>
+              <div class="field">
+                <label for="ir_sgi">SGI</label>
+                <input class="numeric-input" type="text" inputmode="decimal" pattern="^-?\d+(\.\d+)?$" id="ir_sgi" name="ir_sgi" value="{{ form_values.ir.sgi }}" required />
+              </div>
+              <div class="field">
+                <label for="ir_fidelity_ts">FIDELITY_TS</label>
+                <input class="numeric-input" type="text" inputmode="decimal" pattern="^-?\d+(\.\d+)?$" id="ir_fidelity_ts" name="ir_fidelity_ts" value="{{ form_values.ir.fidelity_ts }}" required />
+              </div>
+              <div class="field">
+                <label for="ir_schwab">SCHWAB</label>
+                <input class="numeric-input" type="text" inputmode="decimal" pattern="^-?\d+(\.\d+)?$" id="ir_schwab" name="ir_schwab" value="{{ form_values.ir.schwab }}" required />
+              </div>
+              <div class="field">
+                <label for="ir_annuity_pe10">ANNUITY_PE10</label>
+                <input class="numeric-input" type="text" inputmode="decimal" pattern="^-?\d+(\.\d+)?$" id="ir_annuity_pe10" name="ir_annuity_pe10" value="{{ form_values.ir.annuity_pe10 }}" required />
+              </div>
+              <div class="field">
+                <label for="ir_annuity_a10">ANNUITY_A10</label>
+                <input class="numeric-input" type="text" inputmode="decimal" pattern="^-?\d+(\.\d+)?$" id="ir_annuity_a10" name="ir_annuity_a10" value="{{ form_values.ir.annuity_a10 }}" required />
+              </div>
+              <div class="field">
+                <label for="ir_fidelity_ig">FIDELITY_IG</label>
+                <input class="numeric-input" type="text" inputmode="decimal" pattern="^-?\d+(\.\d+)?$" id="ir_fidelity_ig" name="ir_fidelity_ig" value="{{ form_values.ir.fidelity_ig }}" required />
+              </div>
+            </section>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Add Records And Generate SQL</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script>
+      const root = document.documentElement;
+      const themeToggle = document.getElementById('themeToggle');
+
+      const storedTheme = localStorage.getItem('portfolio-theme');
+      if (storedTheme === 'light' || storedTheme === 'dark') {
+        root.setAttribute('data-theme', storedTheme);
+      } else {
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      }
+
+      const updateToggleText = () => {
+        const current = root.getAttribute('data-theme') || 'light';
+        themeToggle.textContent = current === 'dark' ? 'Switch To Light' : 'Switch To Dark';
+      };
+
+      themeToggle.addEventListener('click', () => {
+        const current = root.getAttribute('data-theme') || 'light';
+        const next = current === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        localStorage.setItem('portfolio-theme', next);
+        updateToggleText();
+      });
+
+      updateToggleText();
+
+      document.querySelectorAll('.numeric-input').forEach((input) => {
+        input.addEventListener('input', () => {
+          let value = input.value.replace(/[^0-9.-]/g, '');
+          value = value.replace(/(?!^)-/g, '');
+          const dotIndex = value.indexOf('.');
+          if (dotIndex !== -1) {
+            value = value.slice(0, dotIndex + 1) + value.slice(dotIndex + 1).replace(/\./g, '');
+          }
+          input.value = value;
+        });
+      });
+    </script>
+  </body>
+</html>
