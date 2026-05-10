@@ -284,6 +284,13 @@ def generate() -> str:
             message=None,
             error=str(exc),
         )
+    except OSError as exc:
+        return render_template(
+            "index.html",
+            form_values=submitted_form_values,
+            message=None,
+            error=f"Unable to read or write portfolio files: {exc}",
+        )
 
 
 if __name__ == "__main__":
