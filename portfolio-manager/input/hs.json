@@ -308,5 +308,10 @@
     "ENTEREDON": "06/06/2026",
     "CATEGORY": "HEALTHSAVINGS",
     "HSA": 23920
+  },
+  {
+    "ENTEREDON": "06/18/2026",
+    "CATEGORY": "HEALTHSAVINGS",
+    "HSA": 24654
   }
 ]
