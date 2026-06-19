@@ -234,47 +234,47 @@ def index() -> str:
     )
 
 
-@app.post("/generate")
-def generate() -> str:
+def _save_records_from_form(form: Any) -> None:
+    cc_record = _build_record_from_form(
+        form,
+        prefix="cc",
+        label=CATEGORIES["cc"],
+        category=CATEGORIES["cc"],
+        amount_fields=CC_FIELDS,
+    )
+    hs_record = _build_record_from_form(
+        form,
+        prefix="hs",
+        label=CATEGORIES["hs"],
+        category=CATEGORIES["hs"],
+        amount_fields=HS_FIELDS,
+    )
+    ir_record = _build_record_from_form(
+        form,
+        prefix="ir",
+        label=CATEGORIES["ir"],
+        category=CATEGORIES["ir"],
+        amount_fields=IR_FIELDS,
+    )
+
+    _append_record(FILE_MAP["cc"], cc_record, CATEGORIES["cc"])
+    _append_record(FILE_MAP["hs"], hs_record, CATEGORIES["hs"])
+    _append_record(FILE_MAP["ir"], ir_record, CATEGORIES["ir"])
+
+
+@app.post("/save")
+def save() -> str:
     submitted_form_values = _form_state_from_request(request.form)
 
     try:
-        cc_record = _build_record_from_form(
-            request.form,
-            prefix="cc",
-            label=CATEGORIES["cc"],
-            category=CATEGORIES["cc"],
-            amount_fields=CC_FIELDS,
-        )
-        hs_record = _build_record_from_form(
-            request.form,
-            prefix="hs",
-            label=CATEGORIES["hs"],
-            category=CATEGORIES["hs"],
-            amount_fields=HS_FIELDS,
-        )
-        ir_record = _build_record_from_form(
-            request.form,
-            prefix="ir",
-            label=CATEGORIES["ir"],
-            category=CATEGORIES["ir"],
-            amount_fields=IR_FIELDS,
-        )
-
-        _append_record(FILE_MAP["cc"], cc_record, CATEGORIES["cc"])
-        _append_record(FILE_MAP["hs"], hs_record, CATEGORIES["hs"])
-        _append_record(FILE_MAP["ir"], ir_record, CATEGORIES["ir"])
-
-        sql_text = build_sql(FILE_MAP["cc"], FILE_MAP["hs"], FILE_MAP["ir"])
-        OUTPUT_SQL.parent.mkdir(parents=True, exist_ok=True)
-        OUTPUT_SQL.write_text(sql_text, encoding="utf-8")
+        _save_records_from_form(request.form)
 
         success_form_values = _form_state_from_last_records()
 
         return render_template(
             "index.html",
             form_values=success_form_values,
-            message=f"Records added and SQL generated at {OUTPUT_SQL}",
+            message="Records saved to input JSON files.",
             error=None,
         )
     except ValueError as exc:
@@ -290,6 +290,30 @@ def generate() -> str:
             form_values=submitted_form_values,
             message=None,
             error=f"Unable to read or write portfolio files: {exc}",
+        )
+
+
+@app.post("/generate")
+def generate() -> str:
+    form_values = _form_state_from_last_records()
+
+    try:
+        sql_text = build_sql(FILE_MAP["cc"], FILE_MAP["hs"], FILE_MAP["ir"])
+        OUTPUT_SQL.parent.mkdir(parents=True, exist_ok=True)
+        OUTPUT_SQL.write_text(sql_text, encoding="utf-8")
+
+        return render_template(
+            "index.html",
+            form_values=form_values,
+            message=f"SQL generated at {OUTPUT_SQL}",
+            error=None,
+        )
+    except (ValueError, OSError) as exc:
+        return render_template(
+            "index.html",
+            form_values=form_values,
+            message=None,
+            error=f"Unable to generate SQL: {exc}",
         )
 
 
