@@ -295,9 +295,10 @@ def save() -> str:
 
 @app.post("/generate")
 def generate() -> str:
-    form_values = _form_state_from_last_records()
+    form_values = _form_state_from_request(request.form)
 
     try:
+        form_values = _form_state_from_last_records()
         sql_text = build_sql(FILE_MAP["cc"], FILE_MAP["hs"], FILE_MAP["ir"])
         OUTPUT_SQL.parent.mkdir(parents=True, exist_ok=True)
         OUTPUT_SQL.write_text(sql_text, encoding="utf-8")
