@@ -1,23 +1,28 @@
 import base64
 import webbrowser
-from urllib.parse import urlparse, parse_qs
+from pathlib import Path
+from urllib.parse import urlencode, urlparse, parse_qs
 
 import requests
 from dotenv import set_key
 
 import config
 
-_ENV_PATH = ".env"
+_ENV_PATH = str(Path(__file__).resolve().parent / ".env")
 
 _refresh_token = config.SCHWAB_REFRESH_TOKEN
 
 
 def get_authorization_url() -> str:
-    return (
-        f"{config.SCHWAB_AUTH_URL}"
-        f"?response_type=code&client_id={config.SCHWAB_APP_KEY}"
-        f"&scope=readonly&redirect_uri={config.SCHWAB_REDIRECT_URI}"
+    query = urlencode(
+        {
+            "response_type": "code",
+            "client_id": config.SCHWAB_APP_KEY,
+            "scope": "readonly",
+            "redirect_uri": config.SCHWAB_REDIRECT_URI,
+        }
     )
+    return f"{config.SCHWAB_AUTH_URL}?{query}"
 
 
 def _basic_auth_header() -> dict:
