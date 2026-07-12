@@ -1,12 +1,14 @@
 import json
+from pathlib import Path
 
-STOCKS_FILE_PATH = "data/Stocks.json"
+BASE_DIR = Path(__file__).resolve().parent
+STOCKS_FILE_PATH = str(BASE_DIR / "data" / "Stocks.json")
 
 
 def load_unique_symbols(file_path: str = STOCKS_FILE_PATH) -> list[str]:
     """Load portfolio holdings and return the deduplicated, sorted list of
     valid ticker symbols (drops placeholder entries like '?')."""
-    with open(file_path) as f:
+    with open(file_path, encoding="utf-8") as f:
         holdings = json.load(f)
 
     symbols = {
