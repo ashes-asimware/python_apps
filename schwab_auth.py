@@ -47,7 +47,8 @@ def exchange_code_for_tokens(redirect_response_or_code: str) -> str:
     code = redirect_response_or_code.strip()
     if code.startswith("http"):
         code = parse_qs(urlparse(code).query).get("code", [""])[0]
-
+    if not code:
+        raise ValueError("No authorization code found in the provided input.")
     response = requests.post(
         config.SCHWAB_TOKEN_URL,
         headers=_basic_auth_header(),
