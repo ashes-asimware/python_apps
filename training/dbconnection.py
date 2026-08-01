@@ -7,7 +7,7 @@ class DatabaseConnection:
         self._port = port
         self._user = user
         self._password = password
-        self.database = database
+        self._database = database
         self.connection = None
 
     def connect(self):
