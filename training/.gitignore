@@ -6,7 +6,8 @@ venv*
 \.venv*
 
 # Windows virtualenv scripts folder pattern
-venv/
+venv/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -22,7 +23,6 @@ pip-log.txt
 
 # VS Code settings
 /.vscode/
-
-# Password file
+# Password is provided via environment variables; no secret file to ignore here
 password.py
 
