@@ -7,7 +7,8 @@ class DatabaseConnection:
         self._port = port
         self._user = user
         self._password = password
-        self._database = database
+        self._database = database
+
         self.connection = None
 
     def connect(self):
@@ -23,8 +24,8 @@ class DatabaseConnection:
     def connect_no_db(self):
         self.connection = mc.connect(
             host=self._host,
-            port=self._port,
-            user=self.user,
+            user=self._user,
+            password=self._password,
             password=self.password
         )
 
