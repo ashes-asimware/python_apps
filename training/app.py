@@ -1,6 +1,5 @@
 import mysql.connector as mc
 from password import PASSWORD
-import dbconnection as dc
 
 db = mc.connect(
     host="localhost",
