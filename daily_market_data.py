@@ -107,8 +107,14 @@ def main() -> None:
     if failed_symbols:
         print(f"\nNo quote returned for {len(failed_symbols)} symbol(s): {failed_symbols}")
 
-    output_path = f"data/daily_quotes_{date.today().isoformat()}.json"
-    with open(output_path, "w") as f:
+    from pathlib import Path
+
+    output_path = (
+        Path(__file__).resolve().parent
+        / "data"
+        / f"daily_quotes_{date.today().isoformat()}.json"
+    )
+    with open(output_path, "w", encoding="utf-8") as f:
         json.dump([asdict(q) for q in quotes], f, indent=2)
     print(f"\nSaved quotes to {output_path}")
 
