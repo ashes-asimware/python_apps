@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image API Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .api-section {
+            background: white;
+            border-radius: 11px;
+            box-shadow: 0 8px 23px rgba(0, 0, 0, 0.3);
+            padding: 19px;
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+        }
+        
+        .api-section:hover {
+            transform: translateY(-5px);
+        }
+        
+        .api-section h2 {
+            color: #1e3c72;
+            margin-bottom: 11px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.35em;
+        }
+        
+        .api-section p {
+            color: #666;
+            margin-bottom: 11px;
+            font-size: 0.9em;
+        }
+        
+        .input-group {
+            margin-bottom: 11px;
+        }
+        
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.85em;
+        }
+        
+        input[type="date"],
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            padding: 9px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.9em;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+        
+        button {
+            padding: 9px 18px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result-section {
+            margin-top: 15px;
+            padding: 11px;
+            background: #f5f5f5;
+            border-radius: 6px;
+            min-height: 38px;
+        }
+        
+        .result-section img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            margin-top: 8px;
+            box-shadow: 0 4px 11px rgba(0, 0, 0, 0.2);
+        }
+        
+        .loading {
+            color: #2a5298;
+            font-size: 0.95em;
+            display: none;
+            text-align: center;
+            padding: 15px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .error {
+            color: #d32f2f;
+            padding: 11px;
+            background: #ffebee;
+            border-radius: 6px;
+            display: none;
+            margin-top: 8px;
+            font-size: 0.9em;
+        }
+        
+        .error.show {
+            display: block;
+        }
+        
+        .success {
+            color: #2e7d32;
+            padding: 11px;
+            background: #e8f5e9;
+            border-radius: 6px;
+            display: none;
+            margin-top: 8px;
+            font-size: 0.9em;
+        }
+        
+        .success.show {
+            display: block;
+        }
+        
+        .result-label {
+            font-weight: 600;
+            color: #1e3c72;
+            margin-top: 8px;
+            font-size: 1em;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+            gap: 15px;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Image API Dashboard</h1>
+        
+        <div class="grid">
+            <!-- Moon Phase Endpoint -->
+            <div class="api-section">
+                <h2>🌙 Moon Phase</h2>
+                <p>Get moon phase image for a specific date</p>
+                <div class="input-group">
+                    <label for="moonDate">Select Date:</label>
+                    <input type="date" id="moonDate" value="">
+                </div>
+                <button onclick="getMoonPhase()">Get Moon Phase</button>
+                <div class="result-section" id="moonResult">
+                    <div class="loading" id="moonLoading">Loading...</div>
+                    <div class="error" id="moonError"></div>
+                </div>
+            </div>
+            
+            <!-- Image Count Endpoint -->
+            <div class="api-section">
+                <h2>📊 Image Count</h2>
+                <p>Get total number of images available</p>
+                <button onclick="getImageCount()">Get Count</button>
+                <div class="result-section" id="countResult">
+                    <div class="loading" id="countLoading">Loading...</div>
+                    <div class="error" id="countError"></div>
+                </div>
+            </div>
+            
+            <!-- Image by Number Endpoint -->
+            <div class="api-section">
+                <h2>🔢 Image by Number</h2>
+                <p>Get image by random number (mod 9)</p>
+                <div class="input-group">
+                    <label for="imageNumber">Enter Number:</label>
+                    <input type="number" id="imageNumber" placeholder="Enter any number" min="0">
+                </div>
+                <button onclick="getImageByNumber()">Get Image</button>
+                <div class="result-section" id="numberResult">
+                    <div class="loading" id="numberLoading">Loading...</div>
+                    <div class="error" id="numberError"></div>
+                </div>
+            </div>
+            
+            <!-- Random Car Picture Endpoint -->
+            <div class="api-section">
+                <h2>🚗 Random Car Picture</h2>
+                <p>Get a random car image from the collection</p>
+                <button onclick="getRandomCar()">Get Random Car</button>
+                <div class="result-section" id="carResult">
+                    <div class="loading" id="carLoading">Loading...</div>
+                    <div class="error" id="carError"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = `https://${window.location.hostname}:8443`;
+        
+        // Set today's date as default
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('moonDate').value = today;
+        
+        // Helper function to show/hide elements
+        function showElement(id) {
+            document.getElementById(id).classList.add('show');
+        }
+        
+        function hideElement(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+        
+        function clearResult(prefix) {
+            const result = document.getElementById(`${prefix}Result`);
+            result.innerHTML = `
+                <div class="loading" id="${prefix}Loading">Loading...</div>
+                <div class="error" id="${prefix}Error"></div>
+            `;
+        }
+        
+        // Moon Phase Endpoint
+        async function getMoonPhase() {
+            const dateInput = document.getElementById('moonDate').value;
+            
+            if (!dateInput) {
+                showElement('moonError');
+                document.getElementById('moonError').textContent = 'Please select a date';
+                return;
+            }
+            
+            clearResult('moon');
+            showElement('moonLoading');
+            
+            try {
+                const response = await fetch(`${API_BASE}/moonphase?date=${dateInput}`);
+                hideElement('moonLoading');
+                
+                if (!response.ok) throw new Error('Failed to fetch moon phase');
+                
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                
+                // Determine phase from filename
+                const contentDisposition = response.headers.get('content-disposition');
+                let phaseName = 'Moon Phase';
+                if (contentDisposition) {
+                    if (contentDisposition.includes('fullmoon')) {
+                        phaseName = '🌕 Full Moon';
+                    } else if (contentDisposition.includes('halfmoon')) {
+                        phaseName = '🌗 Half Moon';
+                    } else if (contentDisposition.includes('newmoon')) {
+                        phaseName = '🌑 New Moon';
+                    } else if (contentDisposition.includes('emptycircle')) {
+                        phaseName = '🌘 Other Phase';
+                    }
+                }
+                
+                document.getElementById('moonResult').innerHTML = `
+                    <div class="result-label">${phaseName}</div>
+                    <img src="${imageUrl}" alt="Moon Phase" class="fade-in">
+                `;
+            } catch (err) {
+                hideElement('moonLoading');
+                showElement('moonError');
+                document.getElementById('moonError').textContent = 'Error: ' + err.message;
+            }
+        }
+        
+        // Image Count Endpoint
+        async function getImageCount() {
+            clearResult('count');
+            showElement('countLoading');
+            
+            try {
+                const response = await fetch(`${API_BASE}/images/count`);
+                hideElement('countLoading');
+                
+                if (!response.ok) throw new Error('Failed to fetch count');
+                
+                const data = await response.json();
+                document.getElementById('countResult').innerHTML = `
+                    <div class="success show fade-in">
+                        <strong>Total Images:</strong> ${data.count}
+                    </div>
+                `;
+            } catch (err) {
+                hideElement('countLoading');
+                showElement('countError');
+                document.getElementById('countError').textContent = 'Error: ' + err.message;
+            }
+        }
+        
+        // Image by Number Endpoint
+        async function getImageByNumber() {
+            const number = document.getElementById('imageNumber').value;
+            
+            if (!number && number !== '0') {
+                showElement('numberError');
+                document.getElementById('numberError').textContent = 'Please enter a number';
+                return;
+            }
+            
+            clearResult('number');
+            showElement('numberLoading');
+            
+            try {
+                const response = await fetch(`${API_BASE}/images/${number}`);
+                hideElement('numberLoading');
+                
+                if (!response.ok) throw new Error('Image not found');
+                
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                
+                const actualNumber = (parseInt(number) % 9) + 1;
+                document.getElementById('numberResult').innerHTML = `
+                    <div class="result-label">Image #${actualNumber} (from input: ${number})</div>
+                    <img src="${imageUrl}" alt="Car Image" class="fade-in">
+                `;
+            } catch (err) {
+                hideElement('numberLoading');
+                showElement('numberError');
+                document.getElementById('numberError').textContent = 'Error: ' + err.message;
+            }
+        }
+        
+        // Random Car Picture Endpoint
+        async function getRandomCar() {
+            clearResult('car');
+            showElement('carLoading');
+            
+            try {
+                const response = await fetch(`${API_BASE}/pictureofcar`);
+                hideElement('carLoading');
+                
+                if (!response.ok) throw new Error('Failed to fetch random car');
+                
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                
+                document.getElementById('carResult').innerHTML = `
+                    <div class="result-label">Random Car Image</div>
+                    <img src="${imageUrl}" alt="Random Car" class="fade-in">
+                `;
+            } catch (err) {
+                hideElement('carLoading');
+                showElement('carError');
+                document.getElementById('carError').textContent = 'Error: ' + err.message;
+            }
+        }
+        
+        // Load moon phase on page load
+        window.addEventListener('load', () => {
+            getMoonPhase();
+        });
+        
+        // Allow Enter key on inputs
+        document.getElementById('moonDate').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') getMoonPhase();
+        });
+        
+        document.getElementById('imageNumber').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') getImageByNumber();
+        });
+    </script>
+</body>
+</html>

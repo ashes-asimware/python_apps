@@ -1,0 +1,10 @@
+[tool]
+name = "ragimpl"
+version = "0.1.0"
+description = "A brief description of the ragimpl project."
+authors = ["Your Name <youremail@example.com>"]
+license = "MIT"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

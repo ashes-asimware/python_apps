@@ -1,0 +1,16 @@
+# Exclude images folder
+images/
+
+# Exclude SSL certificates
+artifacts/
+cert.pem
+key.pem
+
+# Exclude secrets and credentials
+secretvalues.py
+deploy/acr-credentials.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
