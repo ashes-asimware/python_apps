@@ -461,11 +461,18 @@
     "ETHEREUM": 9968,
     "CASH": 1260
   },
-  {
+  {
     "ENTEREDON": "08/14/2026",
     "CATEGORY": "CRYPTOCURRENCY",
     "BITCOIN": 8141,
     "ETHEREUM": 10053,
+    "CASH": 1260
+  },
+  {
+    "ENTEREDON": "08/27/2026",
+    "CATEGORY": "CRYPTOCURRENCY",
+    "BITCOIN": 10321,
+    "ETHEREUM": 13319,
     "CASH": 1260
   }
 ]
