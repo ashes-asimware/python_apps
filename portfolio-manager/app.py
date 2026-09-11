@@ -23,7 +23,7 @@ FILE_MAP = {
 app = Flask(__name__)
 
 CC_FIELDS = ["BITCOIN", "ETHEREUM", "CASH"]
-HS_FIELDS = ["HSA"]
+HS_FIELDS = ["OPTUM", "HEALTHEQUITY"]
 IR_FIELDS = [
     "MGI",
     "SGI",
@@ -32,6 +32,7 @@ IR_FIELDS = [
     "ANNUITY_PE10",
     "ANNUITY_A10",
     "FIDELITY_IG",
+    "AONPEP_TS",
 ]
 
 CATEGORIES = {
@@ -179,7 +180,8 @@ def _form_state_from_last_records() -> dict[str, dict[str, str]]:
         "hs": {
             "enteredon": str(hs.get("ENTEREDON", "")),
             "category": CATEGORIES["hs"],
-            "hsa": str(hs.get("HSA", "")),
+            "optum": str(hs.get("OPTUM", "")),
+            "healthequity": str(hs.get("HEALTHEQUITY", "")),
         },
         "ir": {
             "enteredon": str(ir.get("ENTEREDON", "")),
@@ -191,6 +193,7 @@ def _form_state_from_last_records() -> dict[str, dict[str, str]]:
             "annuity_pe10": str(ir.get("ANNUITY_PE10", "")),
             "annuity_a10": str(ir.get("ANNUITY_A10", "")),
             "fidelity_ig": str(ir.get("FIDELITY_IG", "")),
+            "aonpep_ts": str(ir.get("AONPEP_TS", "")),
         },
     }
 
@@ -207,7 +210,8 @@ def _form_state_from_request(form: Any) -> dict[str, dict[str, str]]:
         "hs": {
             "enteredon": (form.get("hs_enteredon", "") or "").strip(),
             "category": CATEGORIES["hs"],
-            "hsa": (form.get("hs_hsa", "") or "").strip(),
+            "optum": (form.get("hs_optum", "") or "").strip(),
+            "healthequity": (form.get("hs_healthequity", "") or "").strip(),
         },
         "ir": {
             "enteredon": (form.get("ir_enteredon", "") or "").strip(),
@@ -219,6 +223,7 @@ def _form_state_from_request(form: Any) -> dict[str, dict[str, str]]:
             "annuity_pe10": (form.get("ir_annuity_pe10", "") or "").strip(),
             "annuity_a10": (form.get("ir_annuity_a10", "") or "").strip(),
             "fidelity_ig": (form.get("ir_fidelity_ig", "") or "").strip(),
+            "aonpep_ts": (form.get("ir_aonpep_ts", "") or "").strip(),
         },
     }
 
@@ -295,10 +300,10 @@ def save() -> str:
 
 @app.post("/generate")
 def generate() -> str:
-    form_values = _form_state_from_request(request.form)
+    form_values = _form_state_from_request(request.form)
 
     try:
-        form_values = _form_state_from_last_records()
+        form_values = _form_state_from_last_records()
         sql_text = build_sql(FILE_MAP["cc"], FILE_MAP["hs"], FILE_MAP["ir"])
         OUTPUT_SQL.parent.mkdir(parents=True, exist_ok=True)
         OUTPUT_SQL.write_text(sql_text, encoding="utf-8")

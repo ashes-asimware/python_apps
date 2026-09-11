@@ -221,8 +221,12 @@
                 <input type="text" id="hs_enteredon" name="hs_enteredon" value="{{ form_values.hs.enteredon }}" pattern="^\d{2}/\d{2}/\d{4}$" placeholder="MM/DD/YYYY" title="Use MM/DD/YYYY format" required />
               </div>
               <div class="field">
-                <label for="hs_hsa">HSA</label>
-                <input class="numeric-input" type="text" inputmode="decimal" pattern="^-?\d+(\.\d+)?$" id="hs_hsa" name="hs_hsa" value="{{ form_values.hs.hsa }}" required />
+                <label for="hs_optum">OPTUM</label>
+                <input class="numeric-input" type="text" inputmode="decimal" pattern="^-?\d+(\.\d+)?$" id="hs_optum" name="hs_optum" value="{{ form_values.hs.optum }}" required />
+              </div>
+              <div class="field">
+                <label for="hs_healthequity">HEALTHEQUITY</label>
+                <input class="numeric-input" type="text" inputmode="decimal" pattern="^-?\d+(\.\d+)?$" id="hs_healthequity" name="hs_healthequity" value="{{ form_values.hs.healthequity }}" required />
               </div>
             </section>
 
@@ -259,6 +263,10 @@
               <div class="field">
                 <label for="ir_fidelity_ig">FIDELITY_IG</label>
                 <input class="numeric-input" type="text" inputmode="decimal" pattern="^-?\d+(\.\d+)?$" id="ir_fidelity_ig" name="ir_fidelity_ig" value="{{ form_values.ir.fidelity_ig }}" required />
+              </div>
+              <div class="field">
+                <label for="ir_aonpep_ts">AONPEP_TS</label>
+                <input class="numeric-input" type="text" inputmode="decimal" pattern="^-?\d+(\.\d+)?$" id="ir_aonpep_ts" name="ir_aonpep_ts" value="{{ form_values.ir.aonpep_ts }}" required />
               </div>
             </section>
           </div>
