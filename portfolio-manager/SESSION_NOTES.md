@@ -36,7 +36,7 @@ At the end of each session, add an entry with the template below. Keep it short 
 **Goal:** Document the project for Claude Code and start a session log.
 
 ### Done
-- Added `CLAUDE.md` covering commands, layout, data model, code style and gotchas (commit `304ae32`).
+- Added `CLAUDE.md` covering commands, layout, data model, code style and gotchas.
 - Created this `SESSION_NOTES.md`.
 
 ### Decisions
