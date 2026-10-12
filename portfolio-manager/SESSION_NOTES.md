@@ -45,7 +45,7 @@ At the end of each session, add an entry with the template below. Keep it short 
 ### Open questions / blockers
 - `/save` is not atomic, so a failure after `cc` is written can leave a partial update (see Gotchas in `CLAUDE.md`).
 - There are no tests. `build_sql` and the validation helpers in `app.py` are good first candidates.
-- Several MCP servers from the product-management plugin failed to connect this session (`InvalidHTTPResponse`), and monday needs authentication. They are unrelated to this project.
+- External tooling issues encountered during the session were unrelated to this project.
 
 ### Next steps
 - [ ] Decide whether to make `/save` atomic (write to temp files, then rename).
