@@ -30,6 +30,27 @@ At the end of each session, add an entry with the template below. Keep it short 
 
 ---
 
+## 2026-10-12: Reformat examples.md
+
+**Branch:** claude-code-demo
+**Goal:** Tidy `examples.md`, a prompt-writing cheat sheet, so each qualifier reads as a description of the line before it.
+
+### Done
+- Reorganized `examples.md`. The Context, Action, Details and Examples headings are now `##`, with their qualifiers ("Sets the stage", "Be specific", "Include constraints", "Showing desired patterns") as plain text beneath them. The title and "The 3 Cs of good prompts" section are unchanged.
+
+### Decisions
+- Made the qualifiers plain text rather than headings (why: they describe the heading above, so they shouldn't be headings themselves).
+
+### Open questions / blockers
+- None. The fixes recommended in the 2026-10-11 review entry below are still not applied.
+
+### Next steps
+- [ ] Decide whether to go ahead with the recommendations in the 2026-10-11 review entry (float formatting fix first).
+
+### Files touched
+- `examples.md`: reformatted
+- `SESSION_NOTES.md`: this entry
+
 ## 2026-10-11: Review and recommendations (no code changes)
 
 **Branch:** claude-code-demo
