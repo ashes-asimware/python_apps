@@ -12,7 +12,7 @@ click==8.3.0
 coloredlogs==15.0.1
 distro==1.9.0
 durationpy==0.10
-filelock==3.20.3
+filelock==4.2.1
 flatbuffers==25.9.23
 fsspec==2026.6.0
 google-auth==2.41.1
@@ -52,7 +52,7 @@ overrides==7.7.0
 packaging==25.0
 posthog==5.4.0
 protobuf==6.33.5
-pyasn1==0.6.4
+pyasn1==0.6.5
 pyasn1_modules==0.4.2
 pybase64==1.4.2
 pydantic==2.12.3
