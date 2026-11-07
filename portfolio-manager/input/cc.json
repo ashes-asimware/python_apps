@@ -502,5 +502,19 @@
     "BITCOIN": 10505,
     "ETHEREUM": 12856,
     "CASH": 1260
+  },
+  {
+    "ENTEREDON": "11/06/2026",
+    "CATEGORY": "CRYPTOCURRENCY",
+    "BITCOIN": 9805,
+    "ETHEREUM": 12030,
+    "CASH": 1260
+  },
+  {
+    "ENTEREDON": "11/05/2026",
+    "CATEGORY": "CRYPTOCURRENCY",
+    "BITCOIN": 9805,
+    "ETHEREUM": 12030,
+    "CASH": 1260
   }
 ]
