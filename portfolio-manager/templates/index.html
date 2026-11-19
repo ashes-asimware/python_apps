@@ -305,6 +305,25 @@
 
       updateToggleText();
 
+      // Set current date in "entered on" fields if empty
+      const setCurrentDateInEnteredOnFields = () => {
+        const today = new Date();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const year = today.getFullYear();
+        const currentDate = `${month}/${day}/${year}`;
+
+        const enteredOnFields = ['cc_enteredon', 'hs_enteredon', 'ir_enteredon'];
+        enteredOnFields.forEach((fieldId) => {
+          const field = document.getElementById(fieldId);
+          if (field && !field.value) {
+            field.value = currentDate;
+          }
+        });
+      };
+
+      setCurrentDateInEnteredOnFields();
+
       document.querySelectorAll('.numeric-input').forEach((input) => {
         input.addEventListener('input', () => {
           let value = input.value.replace(/[^0-9.-]/g, '');
